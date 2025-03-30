@@ -1,24 +1,11 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>Welcome to PharmChain 👋</h1>
+      <p>This is your decentralized pharmaceutical traceability app.</p>
+      <p style={{ marginTop: "1rem" }}>
+        Start by navigating to a specific feature like Drug Batch Registry, Prescriptions, or Transfers.
+      </p>
     </div>
   );
 }
