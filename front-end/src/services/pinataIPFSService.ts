@@ -1,40 +1,26 @@
-import { PinataSDK } from "pinata";
+// src/services/pinataIPFSService.ts
+import axios from 'axios';
 
-const pinata = new PinataSDK({
-    pinataJwt: import.meta.env.VITE_PINATA_JWT || "",
-    pinataGateway: import.meta.env.VITE_GATEWAY_URL || "",
-  });
-/**
- * Upload a file to IPFS via Pinata
- * @param file - The File object to upload
- * @returns The CID string (Content Identifier)
- */
+console.log('✅ REACT_APP_PINATA_JWT:', process.env.REACT_APP_PINATA_JWT);
+console.log('✅ REACT_APP_GATEWAY_URL:', process.env.REACT_APP_GATEWAY_URL);
+
+const PINATA_JWT = process.env.REACT_APP_PINATA_JWT;
+
 async function uploadFile(file: File): Promise<string> {
   try {
-    const result = await pinata.upload.public.file(file);
-    return result.cid;
+    const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
+    const formData = new FormData();
+    formData.append('file', file);
+    const headers = {
+      Authorization: `Bearer ${PINATA_JWT}`,
+    };
+    const res = await axios.post<{ IpfsHash: string }>(url, formData, { headers });
+    console.log('File uploaded:', res.data);
+    return res.data.IpfsHash;
   } catch (error) {
-    console.error("Pinata Upload Error:", error);
-    throw new Error("Upload to IPFS failed.");
+    console.error('Pinata Upload Error:', error);
+    throw new Error('Failed to upload file to IPFS.');
   }
 }
 
-/**
- * Convert a CID to a full public gateway URL
- * @param cid - The CID returned from upload
- * @returns Full gateway URL
- */
-async function resolveCID(cid: string): Promise<string> {
-  try {
-    return await pinata.gateways.public.convert(cid);
-  } catch (error) {
-    console.error("Pinata Gateway Resolution Error:", error);
-    throw new Error("Failed to resolve gateway URL.");
-  }
-}
-
-// 👇 Export the service as an object
-export const PinataIPFSService = {
-  uploadFile,
-  resolveCID,
-};
+export { uploadFile };
