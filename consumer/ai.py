@@ -1,11 +1,21 @@
+import os
+from typing import Optional
+
 import requests
 from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
 
-# Your Gemini API key
-API_KEY = 'AIzaSyBhUKYFqXoZT2VuFkFlm9ChtN6KKDhD-9w'
-GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + API_KEY
+# Gemini API configuration (optional for the demo)
+API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
+GEMINI_API_URL: Optional[str] = None
+
+if API_KEY:
+    GEMINI_API_URL = (
+        "https://generativelanguage.googleapis.com/v1beta/models/"
+        "gemini-2.0-flash:generateContent?key="
+        + API_KEY
+    )
 
 # Example detailed drug information
 drug_info = {
@@ -20,6 +30,9 @@ drug_info = {
 
 # Function to summarize drug information using Gemini API
 def summarize_with_gemini(text):
+    if not GEMINI_API_URL:
+        return "Gemini summarization is disabled. Set the GEMINI_API_KEY environment variable to enable this feature."
+
     headers = {
         'Content-Type': 'application/json',
     }

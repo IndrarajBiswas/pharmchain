@@ -2,16 +2,25 @@ import qrcode
 import json
 import hashlib
 import random
+import os
+from typing import Optional
+
 from faker import Faker
 from flask import Flask, render_template_string, request
-import os
 import requests
 
 app = Flask(__name__)
 
-# Your Gemini API key
-API_KEY = 'AIzaSyBhUKYFqXoZT2VuFkFlm9ChtN6KKDhD-9w'
-GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + API_KEY
+# Gemini API configuration (optional for the demo)
+API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
+GEMINI_API_URL: Optional[str] = None
+
+if API_KEY:
+    GEMINI_API_URL = (
+        "https://generativelanguage.googleapis.com/v1beta/models/"
+        "gemini-2.0-flash:generateContent?key="
+        + API_KEY
+    )
 
 # Initialize Faker for generating fake data
 fake = Faker()
@@ -102,6 +111,9 @@ def generate_qr_code(drug_id):
 
 # Function to summarize drug information using Gemini API
 def summarize_with_gemini(text):
+    if not GEMINI_API_URL:
+        return "Gemini summarization is disabled. Set the GEMINI_API_KEY environment variable to enable this feature."
+
     headers = {
         'Content-Type': 'application/json',
     }
