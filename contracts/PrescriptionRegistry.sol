@@ -63,7 +63,7 @@ contract PrescriptionRegistry {
         require(bytes(ipfsCID).length > 0, "Invalid IPFS CID");
 
         // Validate batch
-        (,,uint256 registeredAt) = batchRegistry.getBatch(batchId);
+        (,,,,,, uint256 registeredAt) = batchRegistry.getBatch(batchId);
         require(registeredAt > 0, "Batch not registered");
 
         prescriptions[prescriptionId] = Prescription({

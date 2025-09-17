@@ -57,7 +57,7 @@ contract TransferTracker {
         bytes32 batchIdHash = keccak256(bytes(batchId));
 
         // Ensure batch exists
-        (,,uint256 registeredAt) = batchRegistry.getBatch(batchId);
+        (,,,,,, uint256 registeredAt) = batchRegistry.getBatch(batchId);
         require(registeredAt > 0, "Batch not registered");
 
         Transfer memory t = Transfer({

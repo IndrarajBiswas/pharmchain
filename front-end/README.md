@@ -1,46 +1,55 @@
-# Getting Started with Create React App
+# PharmChain React dApp
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This package delivers a wallet-connected dashboard for managing pharmaceutical supply-chain workflows on top of the PharmChain smart contracts.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Role-aware navigation for admins, manufacturers, wholesalers, pharmacies, and doctors.
+- Batch registration and IPFS-backed document storage using Pinata.
+- Transfer logging, prescription management, and credential issuance flows that map directly to the Solidity contracts.
+- Ethers.js provider utilities (`src/services/*`) that encapsulate contract calls and simplify error handling.
 
-### `npm start`
+## Getting started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+cd front-end
+npm install
+cp .env.example .env      # update with your Pinata + RPC credentials
+npm start
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The development server runs on [http://localhost:3000](http://localhost:3000). Connect a wallet (MetaMask) that points at the same network as your deployed contracts and ensure the addresses in `src/constants/contracts.ts` match the latest deployment.
 
-### `npm test`
+## Project structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Path | Purpose |
+| --- | --- |
+| `src/components/` | Dashboard modules (role manager, batch forms, doctor/pharmacy views). |
+| `src/services/` | Thin wrappers around ethers.js, Pinata SDK, and other side effects. |
+| `src/abi/` | Contract ABIs generated from Hardhat builds. Regenerate after recompiling contracts. |
+| `src/constants/contracts.ts` | Central list of deployed contract addresses. Update after each deployment. |
 
-### `npm run build`
+## Scripts
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Command | Description |
+| --- | --- |
+| `npm start` | Run the development server with hot reloading. |
+| `npm test` | Execute unit tests generated via Create React App. |
+| `npm run build` | Produce an optimised production bundle in `build/`. |
+| `npm run lint` | (Configure ESLint) Validate coding style before committing. |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Environment variables
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Create React App exposes variables prefixed with `REACT_APP_`. Common configuration values:
 
-### `npm run eject`
+- `REACT_APP_PINATA_JWT`: JWT token for Pinata uploads.
+- `REACT_APP_GATEWAY_URL`: Pinata gateway for resolving CIDs.
+- `REACT_APP_DEFAULT_NETWORK`: Hex chain ID expected by the UI (e.g. `0x539` for Hardhat).
+- `REACT_APP_RPC_URL`: Optional RPC endpoint if you need to override the provider connection logic.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Restart the dev server after changing environment variables.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Updating ABIs
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+After modifying any Solidity contract, run `npx hardhat compile` at the repository root and copy the generated JSON ABIs into `src/abi`. Keep the contract address map in sync to avoid signature mismatches.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
